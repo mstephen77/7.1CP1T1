@@ -48,6 +48,7 @@ pipeline {
           emailext (
             subject: "Status: ${currentBuild.fullDisplayName} - Security Scan",
             body: "Security Scan complete. Status: ${currentBuild.currentResult}",
+            recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
             to: 's225706972@deakin.edu.au',
             attachLog: true
           )
