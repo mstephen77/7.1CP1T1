@@ -16,6 +16,17 @@ pipeline {
         echo 'Task: Running JUnit tests for logic validation and Mockito for component interaction.'
         echo 'Tools: JUnit 5, Mockito'
       }
+      post {
+        always {
+          emailext (
+            subject: "Status: ${currentBuild.fullDisplayName} - Test Stage",
+            body: "The Test stage finished with status: ${currentBuild.currentResult}. Please find the build logs attached.",
+            recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+            to: 's225706972@deakin.edu.au',
+            attachLog: true
+          )
+        }
+      }
     }
 
     stage('Code Analysis') {
@@ -31,6 +42,16 @@ pipeline {
         echo 'Stage 4: Security Scan'
         echo 'Task: Scanning code for known vulnerabilities (SAST) and checking dependencies.'
         echo 'Tool: Snyk'
+      }
+      post {
+        always {
+          emailext (
+            subject: "Status: ${currentBuild.fullDisplayName} - Security Scan",
+            body: "Security Scan complete. Status: ${currentBuild.currentResult}",
+            to: 's225706972@deakin.edu.au',
+            attachLog: true
+          )
+        }
       }
     }
 
